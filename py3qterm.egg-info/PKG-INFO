@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: py3qterm
+Version: 0.4
+Summary: Simple terminal/console widget for PyQt5/Pyside2 with vt100 support based on pyqtermwidget(https://bitbucket.org/henning/pyqtermwidget) Original Author: Henning Schroeder 
+Home-page: https://gitlab.com/mikeramsey/py3qtermwidget
+Author: Michael Ramsey
+Author-email: mike@hackerdise.me
+License: UNKNOWN
+Description: Py3QTermWidget
+        =============
+        
+        Unlike the older pyqonsole this console widget works with PyQt5/PySide2 and let's you
+        embed a shell into your application. 
+        
+        See *docs/usage.rst* if you want to know how to use this widget. To test
+        the widget you can execute *demo.py*.
+        
+        Or browse the generated HTML documentation at
+        http://pyqtermwidget.rtfd.org/
+        
+        The vt100 terminal emulation code is based on AjaxTerm and WebShell.
+        All code is distributed under the General Public License 3.
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown

@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: py3qterm
+Version: 0.3
+Summary: Simple terminal/console widget for PyQt5/Pyside2 with vt100 support based on pyqtermwidget(https://bitbucket.org/henning/pyqtermwidget) Original Author: Henning Schroeder
+Home-page: https://gitlab.com/mikeramsey/py3qtermwidget
+Author: Michael Ramsey
+Author-email: mike@hackerdise.me
+License: GPL2
+Description: UNKNOWN
+Keywords: pyqt pyqt5 pyside2 console terminal shell vt100 widget
+Platform: UNKNOWNs
