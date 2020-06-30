@@ -5,19 +5,10 @@ import sys
 
 import sys
 
-if 'PyQt5' in sys.modules:
-    # PyQt5
-    from PyQt5.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
-    from PyQt5.QtCore import QTimer, QRect, Qt, Signal as pyqtSignal
-    from PyQt5.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
-                            QPen, QPixmap, QImage, QContextMenuEvent)
-
-else:
-    # PySide2
-    from PySide2.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
-    from PySide2.QtCore import QTimer, QRect, Qt, Signal as pyqtSignal
-    from PySide2.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
-                            QPen, QPixmap, QImage, QContextMenuEvent)
+from qtpy.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
+from qtpy.QtCore import QTimer, QRect, Qt, Signal
+from qtpy.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
+                        QPen, QPixmap, QImage, QContextMenuEvent)
 
 from py3qterm import TerminalWidget
 from py3qterm.procinfo import ProcessInfo
@@ -29,12 +20,12 @@ class TabbedTerminal(QTabWidget):
         super(TabbedTerminal, self).__init__(parent)
         self.proc_info = ProcessInfo()
         self.setTabPosition(QTabWidget.South)
-        # self._new_button = QPushButton(self)
-        # self._new_button.setText("New")
-        # self._new_button.clicked.connect(self.new_terminal)
-        # self.setCornerWidget(self._new_button)
-        # self.setTabsClosable(True)
-        # self.setMovable(True)
+        self._new_button = QPushButton(self)
+        self._new_button.setText("New")
+        self._new_button.clicked.connect(self.new_terminal)
+        self.setCornerWidget(self._new_button)
+        self.setTabsClosable(True)
+        self.setMovable(True)
         self.setWindowTitle("Terminal")
         self.resize(800, 600)
         self._terms = []

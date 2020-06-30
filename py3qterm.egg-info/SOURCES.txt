@@ -2,6 +2,7 @@ README.rst
 setup.py
 py3qterm/__init__.py
 py3qterm/backend.py
+py3qterm/demo.py
 py3qterm/frontend.py
 py3qterm/procinfo.py
 py3qterm/test.py

@@ -2,18 +2,9 @@
 import sys
 import time
 
-if 'PyQt5' in sys.modules:
-    # PyQt5
-    from PyQt5.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
-    from PyQt5.QtCore import QTimer, QRect, Qt, Signal as pyqtSignal
-    from PyQt5.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
-                            QPen, QPixmap, QImage, QContextMenuEvent)
-
-else:
-    # PySide2
-    from PySide2.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
-    from PySide2.QtCore import QTimer, QRect, Qt, Signal as pyqtSignal
-    from PySide2.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
+from qtpy.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
+from qtpy.QtCore import QTimer, QRect, Qt, Signal as pyqtSignal
+from qtpy.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
                             QPen, QPixmap, QImage, QContextMenuEvent)
 
 from .backend import Session
