@@ -86,7 +86,6 @@ class TerminalWidget(QWidget):
         self, parent=None, command="/bin/bash", font_name="Monospace", font_size=18
     ):
         super(TerminalWidget, self).__init__(parent)
-        self.parent().setTabOrder(self, self)
         self.setFocusPolicy(Qt.WheelFocus)
         self.setAutoFillBackground(False)
         self.setAttribute(Qt.WA_OpaquePaintEvent, True)
@@ -108,11 +107,11 @@ class TerminalWidget(QWidget):
         self._clipboard = QApplication.clipboard()
         QApplication.instance().lastWindowClosed.connect(Session.close_all)
         if command:
-            self.execute()
+            self.execute(command)
 
-    def execute(self, command="/bin/bash"):
-        self._session = Session()
-        self._session.start(command)
+    def execute(self, command):
+        self._session = Session(command)
+        self._session.start()
         self._timer_id = None
         # start timer either with high or low priority
         if self.hasFocus():

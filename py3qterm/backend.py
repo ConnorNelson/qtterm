@@ -1139,13 +1139,13 @@ def synchronized(func):
 
 
 class Multiplexer(object):
-    def __init__(self, cmd="/bin/bash", env_term="xterm-color", timeout=60 * 60 * 24):
+    def __init__(self, command="/bin/bash", env_term="xterm-color", timeout=60 * 60 * 24):
         # Set Linux signal handler
         if sys.platform in ("linux2", "linux3"):
             self.sigchldhandler = signal.signal(signal.SIGCHLD, signal.SIG_IGN)
         # Session
         self.session = {}
-        self.cmd = cmd
+        self.command = command
         self.env_term = env_term
         self.timeout = timeout
 
@@ -1175,7 +1175,7 @@ class Multiplexer(object):
         self.session[sid]["h"] = h
 
     @synchronized
-    def proc_keepalive(self, sid, w, h, cmd=None):
+    def proc_keepalive(self, sid, w, h, command=None):
         if not sid in self.session:
             # Start a new session
             self.session[sid] = {
@@ -1185,7 +1185,7 @@ class Multiplexer(object):
                 "w": w,
                 "h": h,
             }
-            return self.proc_spawn(sid, cmd)
+            return self.proc_spawn(sid, command)
         elif self.session[sid]["state"] == "alive":
             self.session[sid]["time"] = time.time()
             # Update terminal size
@@ -1195,7 +1195,7 @@ class Multiplexer(object):
         else:
             return False
 
-    def proc_spawn(self, sid, cmd=None):
+    def proc_spawn(self, sid, command=None):
         # Session
         self.session[sid]["state"] = "alive"
         w, h = self.session[sid]["w"], self.session[sid]["h"]
@@ -1206,7 +1206,7 @@ class Multiplexer(object):
             self.session[sid]["state"] = "dead"
             return False
         if pid == 0:
-            cmd = cmd or self.cmd
+            command = command or self.command
             # Safe way to make it work under BSD and Linux
             try:
                 ls = os.environ["LANG"].split(".")
@@ -1220,8 +1220,8 @@ class Multiplexer(object):
                 os.putenv("TERM", self.env_term)
                 os.putenv("PATH", os.environ["PATH"])
                 os.putenv("LANG", ls[0] + ".UTF-8")
-                # os.system(cmd)
-                p = subprocess.Popen(cmd, shell=False)
+                # os.system(command)
+                p = subprocess.Popen(command, shell=False)
                 # print "called with subprocess", p.pid
                 child_pid, sts = os.waitpid(p.pid, 0)
                 # print "child_pid", child_pid, sts
@@ -1370,12 +1370,12 @@ class Multiplexer(object):
 
 
 def ssh_command(login, executable="ssh"):
-    cmd = executable
-    cmd += " -oPreferredAuthentications=keyboard-interactive,password"
-    cmd += " -oNoHostAuthenticationForLocalhost=yes"
-    cmd += " -oLogLevel=FATAL"
-    cmd += " -F/dev/null -l" + login + " localhost"
-    return cmd
+    command = executable
+    command += " -oPreferredAuthentications=keyboard-interactive,password"
+    command += " -oNoHostAuthenticationForLocalhost=yes"
+    command += " -oLogLevel=FATAL"
+    command += " -F/dev/null -l" + login + " localhost"
+    return command
 
 
 class Session(object):
@@ -1385,12 +1385,13 @@ class Session(object):
     def close_all(cls):
         Session._mux.stop()
 
-    def __init__(self, cmd=None, width=80, height=24):
-        if not Session._mux:
-            Session._mux = Multiplexer()
-        self._session_id = "%s-%s" % (time.time(), id(self))
+    def __init__(self, command=None, width=80, height=24):
+        self.command = command
         self._width = width
         self._height = height
+        if not Session._mux:
+            Session._mux = Multiplexer(self.command)
+        self._session_id = "%s-%s" % (time.time(), id(self))
         self._started = False
 
     def resize(self, width, height):
@@ -1399,9 +1400,9 @@ class Session(object):
         if self._started:
             self.keepalive()
 
-    def start(self, cmd=None):
+    def start(self, command=None):
         self._started = Session._mux.proc_keepalive(
-            self._session_id, self._width, self._height, cmd or self.cmd
+            self._session_id, self._width, self._height, command or self.command
         )
         return self._started
 
