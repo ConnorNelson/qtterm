@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import os
 import re
 
 
 class ProcessInfo(object):
-
     def __init__(self):
         self.update()
 
@@ -51,11 +48,3 @@ class ProcessInfo(object):
         except OSError:
             return
         return path
-
-
-if __name__ == "__main__":
-    pi = ProcessInfo()
-    pi.dump(4984)
-    print(pi.all_children(4984))
-    print(pi.cwd(4984))
-    print(pi.cwd(pi.all_children(4984)[-1]))

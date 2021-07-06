@@ -1,11 +1,19 @@
-# -*- coding: utf-8 -*-
 import sys
 import time
 
 from qtpy.QtWidgets import QApplication, QWidget, QTabWidget, QPushButton
 from qtpy.QtCore import QTimer, QRect, Qt, Signal as pyqtSignal
-from qtpy.QtGui import (QClipboard, QPainter, QFont, QBrush, QColor,
-                            QPen, QPixmap, QImage, QContextMenuEvent)
+from qtpy.QtGui import (
+    QClipboard,
+    QPainter,
+    QFont,
+    QBrush,
+    QColor,
+    QPen,
+    QPixmap,
+    QImage,
+    QContextMenuEvent,
+)
 
 from .backend import Session
 
@@ -74,8 +82,9 @@ class TerminalWidget(QWidget):
 
     session_closed = pyqtSignal()
 
-    def __init__(self, parent=None, command="/bin/bash",
-                 font_name="Monospace", font_size=18):
+    def __init__(
+        self, parent=None, command="/bin/bash", font_name="Monospace", font_size=18
+    ):
         super(TerminalWidget, self).__init__(parent)
         self.parent().setTabOrder(self, self)
         self.setFocusPolicy(Qt.WheelFocus)
@@ -140,7 +149,7 @@ class TerminalWidget(QWidget):
     def focusOutEvent(self, event):
         if not self._session.is_alive():
             return
-        # reduced update interval 
+        # reduced update interval
         # -> slower screen updates
         # -> but less load on main app which results in better responsiveness
         if self._timer_id is not None:
@@ -379,7 +388,7 @@ class TerminalWidget(QWidget):
             return [
                 (start_col, start_row, self._columns, start_row + 1),
                 (0, start_row + 1, self._columns, end_row - 1),
-                (0, end_row - 1, end_col, end_row)
+                (0, end_row - 1, end_col, end_row),
             ]
 
     def text(self, rect=None):
@@ -442,7 +451,9 @@ class TerminalWidget(QWidget):
                 found_right = 1
                 break
             end_col += 1
-        self._selection = [(start_col + found_left, row, end_col - found_right + 1, row + 1)]
+        self._selection = [
+            (start_col + found_left, row, end_col - found_right + 1, row + 1)
+        ]
 
         sel = self.text_selection()
         if DEBUG:
