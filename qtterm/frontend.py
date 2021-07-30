@@ -100,7 +100,7 @@ class TerminalWidget(QWidget):
         self._cursor_rect = None
         self._cursor_col = 0
         self._cursor_row = 0
-        self._dirty = False
+        self._dirty = True
         self._blink = False
         self._press_pos = None
         self._selection = None
@@ -118,6 +118,7 @@ class TerminalWidget(QWidget):
             self.focusInEvent(None)
         else:
             self.focusOutEvent(None)
+        self._reset()
 
     def send(self, s):
         self._session.write(s)
@@ -138,6 +139,8 @@ class TerminalWidget(QWidget):
         return False
 
     def focusInEvent(self, event):
+        if not self._session:
+            return
         if not self._session.is_alive():
             return
         if self._timer_id is not None:
@@ -146,6 +149,8 @@ class TerminalWidget(QWidget):
         self.update_screen()
 
     def focusOutEvent(self, event):
+        if not self._session:
+            return
         if not self._session.is_alive():
             return
         # reduced update interval
@@ -156,17 +161,23 @@ class TerminalWidget(QWidget):
         self._timer_id = self.startTimer(750)
 
     def resizeEvent(self, event):
+        if not self._session:
+            return
         if not self._session.is_alive():
             return
         self._columns, self._rows = self._pixel2pos(self.width(), self.height())
         self._session.resize(self._columns, self._rows)
 
     def closeEvent(self, event):
+        if not self._session:
+            return
         if not self._session.is_alive():
             return
         self._session.close()
 
     def timerEvent(self, event):
+        if not self._session:
+            return
         if not self._session.is_alive():
             if self._timer_id is not None:
                 self.killTimer(self._timer_id)
@@ -209,6 +220,8 @@ class TerminalWidget(QWidget):
         self.update()
 
     def paintEvent(self, event):
+        # if not self._session:
+        #     return
         painter = QPainter(self)
         if self._dirty:
             self._dirty = False
@@ -312,6 +325,8 @@ class TerminalWidget(QWidget):
     return_pressed = pyqtSignal()
 
     def keyPressEvent(self, event):
+        if not self._session:
+            return
         text = str(event.text())
         key = event.key()
         modifiers = event.modifiers()
@@ -343,6 +358,8 @@ class TerminalWidget(QWidget):
             self.return_pressed.emit()
 
     def mousePressEvent(self, event):
+        if not self._session:
+            return
         button = event.button()
         if button == Qt.RightButton:
             ctx_event = QContextMenuEvent(QContextMenuEvent.Mouse, event.pos())
@@ -360,6 +377,8 @@ class TerminalWidget(QWidget):
             # self.update_screen()
 
     def mouseReleaseEvent(self, QMouseEvent):
+        if not self._session:
+            return
         pass  # self.update_screen()
 
     def _selection_rects(self, start_pos, end_pos):
@@ -414,6 +433,8 @@ class TerminalWidget(QWidget):
         return self._rows
 
     def mouseMoveEvent(self, event):
+        if not self._session:
+            return
         if self._press_pos:
             move_pos = event.pos()
             self._selection = self._selection_rects(self._press_pos, move_pos)
@@ -426,6 +447,8 @@ class TerminalWidget(QWidget):
             self.update_screen()
 
     def mouseDoubleClickEvent(self, event):
+        if not self._session:
+            return
         self._press_pos = None
         # double clicks create a selection for the word under the cursor
         pos = event.pos()
